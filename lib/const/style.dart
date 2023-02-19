@@ -8,6 +8,7 @@ class K{ //constants
   static   Color primaryColor= Color(0xff8EC9A9);
   static const mainColor= Colors.grey;//shared
   static const blackColor=Colors.black; //shared
+  static const whiteColor=Colors.white; //shared
   static final sizedBoxH= SizedBox(height:25.h,);
   static final sizedBoxW= SizedBox(width:25.w);
   static final boxDecoration= BoxDecoration(

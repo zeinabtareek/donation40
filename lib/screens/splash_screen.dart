@@ -7,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../const/style.dart';
+import 'home/home.dart';
 import 'home_screen/home_screen.dart';
+import 'more_info_screen/more_info_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -25,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
       try {
         //if( await FirebaseAuth.instance.currentUser !=null) //
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => Home()));
         //else{
         //      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthScreen()));
 
