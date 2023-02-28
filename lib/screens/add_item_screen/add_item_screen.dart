@@ -50,7 +50,8 @@ class _AddItemScreenState extends State<AddItemScreen> {
                     : Image.file(image!),
               ),
               onTap: () {
-                pickImage();
+                pickImage();//
+
               },
             ),
             K.sizedBoxH,

@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
       //async //check ->login ,
       try {
         //if( await FirebaseAuth.instance.currentUser !=null) //
+
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
         //else{

@@ -1,51 +1,101 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
+ import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../componants/custom_address_textField.dart';
+import '../../componants/custom_button.dart';
+import '../../const/style.dart';
+import '../add_item_screen/add_item_screen.dart';
+import 'controller/map_controller.dart';
 
-class MapSample extends StatefulWidget {
-  const MapSample({Key? key}) : super(key: key);
-
-  @override
-  State<MapSample> createState() => MapSampleState();
-}
-
-class MapSampleState extends State<MapSample> {
-  final Completer<GoogleMapController> _controller =
-  Completer<GoogleMapController>();
-
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
-
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
-
+class MapScreen extends StatelessWidget {
+  MapScreen({Key? key}) : super(key: key);
+  TextEditingController areaNumber=TextEditingController();
+  TextEditingController restAddress=TextEditingController();
+  TextEditingController apartmentNumber=TextEditingController();
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      body: GoogleMap(
-        mapType: MapType.hybrid,
-        initialCameraPosition: _kGooglePlex,
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Column(
+          children: [  Container(
+                padding: EdgeInsets.all(5.sp),
+                decoration:K.boxDecoration,
+                width: double.infinity,
+                height: 500.h,
+                child: GoogleMap(
+                          gestureRecognizers: Set()
+                            ..add(Factory<PanGestureRecognizer>(
+                                    () => PanGestureRecognizer()))
+                            ..add(Factory<ScaleGestureRecognizer>(
+                                    () => ScaleGestureRecognizer()))
+                            ..add(Factory<TapGestureRecognizer>(
+                                    () => TapGestureRecognizer()))
+                            ..add(Factory<
+                                VerticalDragGestureRecognizer>(
+                                    () =>
+                                    VerticalDragGestureRecognizer())),
+                          mapType: MapType.normal,
+                          zoomControlsEnabled: true,
+                          myLocationEnabled: true,
+                          myLocationButtonEnabled: true,
+                          zoomGesturesEnabled: true,
+                           mapToolbarEnabled: true,
+                          initialCameraPosition: CameraPosition(
+                              target: LatLng(37.43296265331129, -122.08832357078792),
+                              zoom: 15),
+                           onMapCreated: (GoogleMapController
+                          gcontroller) async {    },
+                          onTap: (LatLng loc) {
+                            print(
+                                '${loc.latitude}, ${loc.longitude}');
+
+                          },
+                        ),
+                        ),
+
+              Row(
+              children: [
+                Expanded(child:
+                Container(
+                  margin: EdgeInsets.all(10.sp),
+
+                  child:CustomAddressTextField(
+                    textEditingController: areaNumber,
+                    hintText: "رقم المنطقة",
+                    labelText: "رقم المنطقة",
+                  ),),),
+                Expanded(child:
+                Container(
+                  margin: EdgeInsets.all(10.sp),
+
+                  child:CustomAddressTextField(
+                    textEditingController: apartmentNumber,
+                    hintText: "رقم الشقة",
+                    labelText: "رقم الشقة",
+                  ),),),
+
+              ],
+            ),
+
+            Expanded(child:
+            Container(
+              margin: EdgeInsets.all(10.sp),
+              child:CustomAddressTextField(
+                textEditingController: restAddress,
+                hintText: "علامة مميزة ",
+                labelText: " علامة مميزة",
+              ),),),
+
+            Button(text: 'تأكيد العنوان', width: 200, height: 50, isFramed: false,
+              onPressed: (){},)
+          ],
+        ),
       ),
     );
-  }
-
-  Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 }
