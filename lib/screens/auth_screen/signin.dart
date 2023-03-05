@@ -10,7 +10,7 @@ import 'controller/auth_controller.dart';
 
 class SignInScreen extends StatelessWidget {
     SignInScreen({Key? key}) : super(key: key);
- final controller=Get.put(AuthController());
+   final controller=Get.put(AuthController());
 
 
   @override
@@ -30,21 +30,22 @@ class SignInScreen extends StatelessWidget {
                 hintText: " email ",
                 labelText: "email",
                 onChanged: (data){
+                  controller.signInEmail=data;
+                  print(controller.signInEmail);
 
-                  print(data);
-                  controller.email=data;
+
                 },
               ),),
 
-            Container(
+              Container(
               margin: EdgeInsets.all(10),
               child:CustomAddressTextField(
                 textEditingController:  TextEditingController(),
                 hintText: " password ",
                 labelText: "password",
                 onChanged: (data){
-                  controller.password=data;
-                  print(controller.password);
+                  controller.signInPassword=data;
+                  print(controller.signInPassword);
 
                 },
               ),),
@@ -52,8 +53,8 @@ class SignInScreen extends StatelessWidget {
               // controller.register();
               if(controller.formKey.currentState!.validate()){
                 try {
-                 await  controller.logIn(controller.email, controller.password);
-                 // await  controller.register();
+                 // await  controller.logIn(controller.signInEmail,controller.signInPassword);
+                 await  controller.register();
                   showSnackBar(context,'Email Success');
                   Get.to(HomeScreen());
                 }on FirebaseAuthException catch(e){
@@ -73,3 +74,7 @@ class SignInScreen extends StatelessWidget {
     );
   }
 }
+
+
+
+// class Test extends GetxController{}

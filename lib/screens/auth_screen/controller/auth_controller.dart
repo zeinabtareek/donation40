@@ -1,43 +1,31 @@
-import 'package:donation40/services/auth_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class AuthController extends GetxController {
+import '../services/auth_services.dart';
+
+class AuthController extends GetxController { //domain layer
   final services = AuthServices();
   final formKey=GlobalKey<FormState>();
-  String email ='';
-  String password ='';
+  String signInEmail ='';
+  String signUpPassword ='';
+  String signUnEmail ='';
+  String signInPassword ='';
 
-  // register()async { //createUser
-  //   UserCredential  v=await services.auth.createUserWithEmailAndPassword(email: email, password: password);
-  //  }
-  //
-  //  register1(email,pass)async { //createUser
-  //   UserCredential  v=await services.auth.createUserWithEmailAndPassword(email: email, password: pass);
-  //  }
-  //
-  // login(email,password)async { //createUser
-  //   UserCredential  v= await services.auth.signInWithEmailAndPassword(email: email, password: password);
-  // }
-  //
-  // logOut() {
-  //
-  // }
-  //
-  // forgetPassword() {}
 
-register(email,password)async{
-  await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+
+register()async{//dart- isolate
+
+ await services.auth.createUserWithEmailAndPassword(email: signInEmail, password: signInPassword);
+// return
 }
-logIn(email , password)async{
-  await  services.auth.signInWithEmailAndPassword(email: email, password: password);
-   // services.auth.signOut();
+logIn(email,pass)async{
+ await services.auth.signInWithEmailAndPassword(email: signUnEmail, password: signUpPassword);
 }
-  // registerWithPhone()async{
-  //   await FirebaseAuth.instance.signInWithCredential(credential)
-  // }
-//splash - init (credential ) home
+logOut(){
+
+}
 
 }
 // 5(CRUD)

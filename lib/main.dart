@@ -10,23 +10,25 @@ import 'package:get/get.dart';//
 
 import 'const/style.dart'; //flutter sdk
 
-Future<void> main() async {
+Future<void> main() async {//
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(); //
   runApp(  MyApp()); //fun  (myApp)
 }
 
 //MVVM
 //MVC
+//nav ,localization ,rout,res,
+//
 
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
      return  MediaQuery(data: const MediaQueryData() ,
-         child: ScreenUtilInit(//70
+         child: ScreenUtilInit(//70.w
              designSize: const Size(428,925),//
              builder: (BuildContext ,Widget)=>
-             GetMaterialApp( //rout
+             GetMaterialApp( //root
                 // home: TestScreen(),
                 home: SignInScreen(),
                 // home: SplashScreen(),

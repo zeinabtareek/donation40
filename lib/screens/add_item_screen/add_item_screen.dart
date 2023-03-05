@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:donation40/screens/map_screen/map_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,24 +11,35 @@ import 'package:intl/intl.dart';
 
 import '../../componants/custom_button.dart';
 import '../../const/style.dart';
+import 'controller/add_item_controller.dart';
 
 class AddItemScreen extends StatefulWidget {
-  const AddItemScreen({Key? key}) : super(key: key);
+  String? areaNumber;
+  String? restAddress;
+  String? lat;
+  String ?apartmentNumber;
+  String ?lng;
+  String ?address;
+    AddItemScreen({Key? key, this.areaNumber,this.address,this.lat,this.lng,this.apartmentNumber,this.restAddress}) : super(key: key);
 
   @override
   _AddItemScreenState createState() => _AddItemScreenState();
 }
 
 class _AddItemScreenState extends State<AddItemScreen> {
-  final itemCountController = TextEditingController();
-  var date;
-  var time;
-  final dateTime = DateTime.now();
-  final timeOfDay = TimeOfDay.now();
-  File? image;
-  String ?dateID ;
+
+  // final itemCountController = TextEditingController();
+  // var date;
+  // var time;
+  // final dateTime = DateTime.now();
+  // final timeOfDay = TimeOfDay.now();
+  // File? image;
+  // String ?dateID ;
   @override
   Widget build(BuildContext context) {
+    final controller =Get.put(AddItemController());
+
+
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -42,15 +54,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
 
                 decoration: K.boxDecoration,
                 height: 300,
-                child: image == null
+                child: controller.image == null
                     ? Image.asset(
                         'assets/images/no.jpeg',
                         fit: BoxFit.fill,
                       )
-                    : Image.file(image!),
+                    : Image.file(controller.image!),
               ),
               onTap: () {
-                pickImage();//
+                controller.pickImage();//
 
               },
             ),
@@ -59,7 +71,7 @@ class _AddItemScreenState extends State<AddItemScreen> {
               // decoration: K.boxDecoration,
               // margin: EdgeInsets.all(10),
               child: TextFormField(
-                controller: itemCountController,
+                controller: controller.itemCountController,
                 decoration: InputDecoration(
                   hintText: ' Item count',
                   border: OutlineInputBorder(
@@ -87,7 +99,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(MapScreen());
+                    },
                     icon: Icon(Icons.add_location),
                   ),
                   Text(
@@ -107,17 +121,17 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         child: ElevatedButton(
                           onPressed: () async{
 
-                            await showTime(context: context);
-                            if (timeOfDay == null) return; //break
+                            await controller.showTime(context: context);
+                            if (controller.timeOfDay == null) return; //break
                             setState(() {
-                              date = timeOfDay;
+                              controller.date = controller.timeOfDay;
                             });
                           },
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white)),
-                          child: date != null
-                              ? Text('${date.hour}',style: TextStyle(color: K.blackColor),)
+                          child: controller.date != null
+                              ? Text('${controller.date.hour}',style: TextStyle(color: K.blackColor),)
                               : Image.asset(
                                   // 'assets/images/snap.png',
                                   'assets/images/alerm.png',
@@ -132,11 +146,11 @@ class _AddItemScreenState extends State<AddItemScreen> {
                         child: ElevatedButton(
                           onPressed: () async {
                             DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");//
-                            await showCalender(context: context);
-                            if (dateTime == null) return; //break
+                            await controller.showCalender(context: context);
+                            if (controller.dateTime == null) return; //break
                             setState(() {
-                              time = dateTime;
-                              dateID = dateFormat.format(time);
+                              controller.time = controller.dateTime;
+                              controller.dateID = dateFormat.format(controller.time);
                             });
                             //
 
@@ -144,9 +158,9 @@ class _AddItemScreenState extends State<AddItemScreen> {
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(
                                   Colors.white)),
-                          child: time != null
+                          child: controller.time != null
                               ? Text(
-                                  '${dateID}',
+                                  '${controller.dateID}',
                                   // '${time.year}/${time.month}/${time.day}',
                                   style: const TextStyle(color: K.blackColor),
                                 )
@@ -158,25 +172,15 @@ class _AddItemScreenState extends State<AddItemScreen> {
               ],
             ),
             K.sizedBoxH,
-            ///Expanded
-            // K.sizedBoxH,
-            // Row(children: [
-            //   // Container(child: Text('Ahmed'),color: Colors.cyan,),
-            //   Expanded( ///2 //flexible///spacer
-            //     // flex: 3,
-            //       child: Container(child: Text('Ahmed'),color: Colors.cyan,)), //
-            //
-            // Container( width: 100,///1
-            //   child:Text('Zeinab'),color: Colors.red,),
-            //
-            // ],),
-            // K.sizedBoxH,
             K.sizedBoxH,
             Center(
               child: Button(
                 width: MediaQuery.of(context).size.width / 2,
                 height: Get.height / 20.h,
-                onPressed: () {},
+                onPressed: () {
+                  controller.addItemToFirebase(widget.apartmentNumber,widget.lat,widget.lng,widget.areaNumber.toString(),widget.address,widget.restAddress);
+                  // controller.addItemToFirebase(widget.restAddress);
+                },
                 text: 'Submit',
                 isFramed: false,
               ),
@@ -187,40 +191,5 @@ class _AddItemScreenState extends State<AddItemScreen> {
     );
   }
 
-  pickImage() async {
-    //class ImagePicker ( obj) , (class )
-    final pickedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(() {
-      image = File(pickedImage!.path);
-    });
-  }
 
-  Future<DateTime?> showCalender({required BuildContext context}) async =>
-      await showDatePicker(
-          context: context,
-          initialDate: dateTime,
-          firstDate: DateTime(2000),
-          lastDate: DateTime(2100),
-          builder: (BuildContext context, Widget? child) {
-            return Theme(
-                data: ThemeData.light().copyWith(
-                    primaryColor: K.primaryColor,
-                    colorScheme: ColorScheme.light(primary: K.primaryColor)),
-                child: child!);
-          });
-
-  Future<TimeOfDay?> showTime({required BuildContext context}) async =>
-      await showTimePicker(//Flutter SDK
-          context: context,
-          initialTime: timeOfDay,
-          builder: (BuildContext context, Widget? child) {
-            return Theme(
-                data: ThemeData.light().copyWith(
-                    primaryColor: Colors.yellow,
-                    // primaryColor: K.primaryColor,
-                    accentColor: Colors.red,
-                    colorScheme: ColorScheme.light(primary: K.primaryColor)),
-                child: child!);
-          });
 }

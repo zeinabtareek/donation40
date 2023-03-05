@@ -8,16 +8,19 @@ import '../../componants/custom_address_textField.dart';
 import '../../componants/custom_button.dart';
 import '../../const/style.dart';
 import '../add_item_screen/add_item_screen.dart';
+import '../add_item_screen/controller/add_item_controller.dart';
 import 'controller/map_controller.dart';
 
 class MapScreen extends StatelessWidget {
   MapScreen({Key? key}) : super(key: key);
-  TextEditingController areaNumber=TextEditingController();
-  TextEditingController restAddress=TextEditingController();
-  TextEditingController apartmentNumber=TextEditingController();
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
-
+final controller=Get.put(MapController());
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -29,7 +32,7 @@ class MapScreen extends StatelessWidget {
                 height: 500.h,
                 child: GoogleMap(
                           gestureRecognizers: Set()
-                            ..add(Factory<PanGestureRecognizer>(
+                      ..add(Factory<PanGestureRecognizer>(
                                     () => PanGestureRecognizer()))
                             ..add(Factory<ScaleGestureRecognizer>(
                                     () => ScaleGestureRecognizer()))
@@ -49,10 +52,14 @@ class MapScreen extends StatelessWidget {
                               target: LatLng(37.43296265331129, -122.08832357078792),
                               zoom: 15),
                            onMapCreated: (GoogleMapController
-                          gcontroller) async {    },
+                          gcontroller) async {
+                            //
+                           },
                           onTap: (LatLng loc) {
                             print(
                                 '${loc.latitude}, ${loc.longitude}');
+                            controller.currentLocation.latitude!=loc.latitude;
+                            controller.currentLocation.longitude!=loc.longitude;
 
                           },
                         ),
@@ -65,16 +72,19 @@ class MapScreen extends StatelessWidget {
                   margin: EdgeInsets.all(10.sp),
 
                   child:CustomAddressTextField(
-                    textEditingController: areaNumber,
+                    textEditingController: TextEditingController(),
                     hintText: "رقم المنطقة",
                     labelText: "رقم المنطقة",
+                    onChanged: (c){
+                      controller.areaNumber=c;
+                    },
                   ),),),
                 Expanded(child:
                 Container(
                   margin: EdgeInsets.all(10.sp),
 
                   child:CustomAddressTextField(
-                    textEditingController: apartmentNumber,
+                    textEditingController: controller.apartmentNumber,
                     hintText: "رقم الشقة",
                     labelText: "رقم الشقة",
                   ),),),
@@ -86,13 +96,28 @@ class MapScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.all(10.sp),
               child:CustomAddressTextField(
-                textEditingController: restAddress,
+                textEditingController: controller.restAddress,
                 hintText: "علامة مميزة ",
                 labelText: " علامة مميزة",
               ),),),
 
             Button(text: 'تأكيد العنوان', width: 200, height: 50, isFramed: false,
-              onPressed: (){},)
+              onPressed: (){
+              Get.to(AddItemScreen(
+                areaNumber:controller.areaNumber,
+                restAddress:controller.restAddress.text,
+                apartmentNumber:controller.apartmentNumber.text,
+                lat:'controller.currentLocation.latitude.toString()',
+                lng:'controller.currentLocation.longitude.toString()',
+                address:'address.c..c,ckncbhbchbhc'
+               ));
+              // Get.off(AddItemScreen());
+              // Get.offAll(AddItemScreen());
+              // Get.back();
+              // Get.toNamed(page);
+              // Get.offNamed(page);
+              // Get.offAllNamed(page);
+              },)
           ],
         ),
       ),
