@@ -1,3 +1,4 @@
+import 'package:donation40/screens/auth_screen/services/auth_services.dart';
 import 'package:donation40/screens/home_screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,8 +51,7 @@ class SignInScreen extends StatelessWidget {
                 },
               ),),
             TextButton(onPressed: () async {
-              // controller.register();
-              if(controller.formKey.currentState!.validate()){
+               if(controller.formKey.currentState!.validate()){
                 try {
                  // await  controller.logIn(controller.signInEmail,controller.signInPassword);
                  await  controller.register();
@@ -65,6 +65,7 @@ class SignInScreen extends StatelessWidget {
                 print('object');
               }
 
+             // await controller.sendVerificationCode(phone: '+201009814536');
 
 
             }, child: Text('Sign Up'),)

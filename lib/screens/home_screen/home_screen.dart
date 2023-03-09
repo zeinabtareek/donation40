@@ -12,6 +12,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../componants/custom_button.dart';
 import '../../componants/custom_main_card_screen.dart';
 import '../../const/style.dart';
+import 'controller/home_screen_controller.dart';
 // view , domain (controller), service(app)
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentImageIndex = 0;
+  final controller =Get.put(HomeScreenController());
 
 
   @override
@@ -47,12 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
   //     ),
   //   );
   // }
-  List homeAdsImages = [
-    'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
-    'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
-    'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
-    'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
-  ];
+  // List homeAdsImages = [
+  //   'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
+  //   'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
+  //   'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
+  //   'https://sb.kaleidousercontent.com/67418/992x558/7632960ff9/people.png',
+  // ];
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -73,17 +74,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ]),
         ),
         SizedBox(height: 10.h),
-        CarouselSlider(
+     Obx(()=>   CarouselSlider(
           options: CarouselOptions(
               autoPlay: true,
               height: Get.height / 2.5.h,
               viewportFraction: 1,
               onPageChanged: (index, reason) {
-                setState(() {
-                  currentImageIndex = index;
-                });
+                // setState(() {
+                controller.change(index);
+                // });
               }),
-          items: homeAdsImages
+          items: controller.homeSliderAds
               .map((item) => Container(
                   clipBehavior: Clip.antiAlias,
                   width: MediaQuery.of(context).size.width - 30,
@@ -91,26 +92,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: Border.all(color: K.primaryColor, width: 2),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: OctoImage(
-                    image: CachedNetworkImageProvider(
-                      item,
-                    ),
-                    placeholderBuilder: OctoPlaceholder.blurHash(
-                        'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                        fit: BoxFit.cover),
-                    errorBuilder: (context, url, error) {
-                      return const BlurHash(
-                          hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj');
-                    },
-                    fit: BoxFit.cover,
-                  )))
+                  child: Column(
+                    children: [
+                      OctoImage(
+                        image: CachedNetworkImageProvider(
+                          item.image,
+                        ),
+                        placeholderBuilder: OctoPlaceholder.blurHash(
+                            'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+                            fit: BoxFit.cover),
+                        errorBuilder: (context, url, error) {
+                          return const BlurHash(
+                              hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj');
+                        },
+                        fit: BoxFit.cover,
+                      ),
+                      Text(item.name),
+
+                    ],
+                  )
+
+          ))
               .toList(),
+        ),
         ),
         SizedBox(
           height: 20.h,
         ),
         AnimatedSmoothIndicator(
-          activeIndex: currentImageIndex,
+          activeIndex: controller.currentImageIndex,
           count: 3,
           effect: ExpandingDotsEffect(
               dotHeight: 5,

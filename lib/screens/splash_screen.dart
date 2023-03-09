@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:donation40/helpers/cache_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 import '../const/style.dart';
+import 'auth_screen/signin.dart';
 import 'home/home.dart';
 import 'home_screen/home_screen.dart';
 import 'more_info_screen/more_info_screen.dart';
@@ -22,24 +24,39 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // print('Hello zeinab ');
-    Timer(Duration(seconds: 5), () {
-      //async //check ->login ,
-      try {
-        //if( await FirebaseAuth.instance.currentUser !=null) //
 
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => Home()));
-        //else{
-        //      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthScreen()));
 
-      } catch (e) {
+    Timer(Duration(seconds: 5), () async {
+      var token = await CacheHelper.getData(key: 'token');
+      try{
+        if(token !=null ){
+          Get.off(Home());
+        }
+        else{
+          Get.off(SignInScreen());
+        }
+      }catch (e){
 
-        print(e);
       }
-    });
-
+//        try {
+//         //if( await FirebaseAuth.instance.currentUser !=null) //
+//         if( token !=null) //
+// {
+//         Navigator.pushReplacement(
+//             context, MaterialPageRoute(builder: (context) => Home()));
+// }
+//         else{
+//              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthScreen()));
+//
+//       } catch (e) {
+//
+//         print(e);
+//       }
+//     });
+//     }
     super.initState();
   }
+    );}
 
   @override
   Widget build(BuildContext context) {

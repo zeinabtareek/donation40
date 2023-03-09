@@ -1,4 +1,5 @@
 import 'package:donation40/componants/custom_button.dart';
+import 'package:donation40/helpers/cache_helper.dart';
 import 'package:donation40/screens/auth_screen/signin.dart';
 import 'package:donation40/screens/map_screen/map_screen.dart';
 import 'package:donation40/screens/splash_screen.dart';
@@ -13,6 +14,7 @@ import 'const/style.dart'; //flutter sdk
 Future<void> main() async {//
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); //
+  await CacheHelper.init();
   runApp(  MyApp()); //fun  (myApp)
 }
 
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget{
              builder: (BuildContext ,Widget)=>
              GetMaterialApp( //root
                 // home: TestScreen(),
-                home: SignInScreen(),
-                // home: SplashScreen(),
+                // home: SignInScreen(),
+                home: SplashScreen(),
 
              )
          ));

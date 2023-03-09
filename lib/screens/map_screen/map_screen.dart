@@ -1,4 +1,6 @@
- import 'package:flutter/foundation.dart';
+ import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,6 +23,8 @@ class MapScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 final controller=Get.put(MapController());
+final Completer<GoogleMapController> _controller =
+Completer<GoogleMapController>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -30,7 +34,9 @@ final controller=Get.put(MapController());
                 decoration:K.boxDecoration,
                 width: double.infinity,
                 height: 500.h,
-                child: GoogleMap(
+                child: GetBuilder<MapController>(
+                  init:MapController() ,
+                      builder:(controller)=>GoogleMap(
                           gestureRecognizers: Set()
                       ..add(Factory<PanGestureRecognizer>(
                                     () => PanGestureRecognizer()))
@@ -45,23 +51,27 @@ final controller=Get.put(MapController());
                           mapType: MapType.normal,
                           zoomControlsEnabled: true,
                           myLocationEnabled: true,
+                          markers: controller.markers.toSet(),
                           myLocationButtonEnabled: true,
                           zoomGesturesEnabled: true,
                            mapToolbarEnabled: true,
-                          initialCameraPosition: CameraPosition(
-                              target: LatLng(37.43296265331129, -122.08832357078792),
+                          initialCameraPosition: CameraPosition(  target: MapController.position1!,
+                          // LatLng(37.43296265331129, -122.08832357078792),
                               zoom: 15),
-                           onMapCreated: (GoogleMapController
-                          gcontroller) async {
-                            //
+                           onMapCreated: (GoogleMapController  gcontroller) async {
+                             _controller.complete(gcontroller);
+                            controller.getCurrentLocation(context);
                            },
                           onTap: (LatLng loc) {
                             print(
                                 '${loc.latitude}, ${loc.longitude}');
                             controller.currentLocation.latitude!=loc.latitude;
                             controller.currentLocation.longitude!=loc.longitude;
+                            controller.addMarkerOnMap(loc);
+                            controller.update();
 
                           },
+                        ),
                         ),
                         ),
 
