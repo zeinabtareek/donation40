@@ -55,8 +55,9 @@ Completer<GoogleMapController>();
                           myLocationButtonEnabled: true,
                           zoomGesturesEnabled: true,
                            mapToolbarEnabled: true,
-                          initialCameraPosition: CameraPosition(  target: MapController.position1!,
-                          // LatLng(37.43296265331129, -122.08832357078792),
+                          initialCameraPosition: CameraPosition(  target:
+                          // MapController.position1!,
+                          LatLng(37.43296265331129, -122.08832357078792),
                               zoom: 15),
                            onMapCreated: (GoogleMapController  gcontroller) async {
                              _controller.complete(gcontroller);

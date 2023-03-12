@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class ItemModel{
   //variables , constructor , map toJson, Map fromJson
 //
@@ -48,7 +50,7 @@ class ItemModel{
 //parameter
 //set ,update
 
-  ItemModel.fromJson(Map json){
+  ItemModel.fromJson(QueryDocumentSnapshot<Map<String, dynamic>>json){
     date=json['date'];
     pieces=json['pieces'];
     address=json['address'];

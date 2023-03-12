@@ -4,6 +4,7 @@
 import 'dart:io';
 
 import 'package:donation40/model/item_model.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,45 +15,64 @@ import '../services/add_item_services.dart';
 class AddItemController extends GetxController{
  final services=AddItemServices();
  final itemCountController = TextEditingController();
- var date;
- var time;
- final dateTime = DateTime.now();
- final timeOfDay = TimeOfDay.now();
- File? image;
+ Rx<DateTime> dateTime = DateTime.now().obs;
+ Rxn<DateTime> newTime = Rxn<DateTime>();
+ Rxn<TimeOfDay> newTimeByHours = Rxn<TimeOfDay>();
+ Rx<TimeOfDay> time = TimeOfDay.now().obs;
+  String timePmOrAm='';
  String ?dateID ;
+ final image1 = ''.obs;
+ final    isLoading= false.obs;
 
  addItemToFirebase(apartmentNumber,lat,lng,areaNumber,address,landMark)async{
-   var x='${dateTime.year}.${dateTime.month}.${dateTime.day}';
-   await services.addItemToFirebase(
+
+
+   isLoading.value=true;
+
+   var x='${newTime.value?.year}.${ newTime.value?.month}.${ newTime.value?.day}';
+   var y='${newTimeByHours.value!.hour}:${newTimeByHours.value?.minute}';   await services.addItemToFirebase(
        ItemModel(
-         date: x,
-         time: '${timeOfDay.hour} ${timeOfDay.minute}',
+           date: x,
+           time: y ,
          apartmentNumber:apartmentNumber,
           lng :lng,
            lat:lat,
            status: 'Success',
-           imageUrl:'',
+           imageUrl: await uploadImageToFirebaseStorage(image1.value,image1.value),
            areaNumber:areaNumber, //pointer 5
            address:address,
            landMark:landMark,
            pieces :itemCountController.text,
            userToken:services.authSer.auth.currentUser!.uid
        ), x);
- }
- pickImage() async {
-   //class ImagePicker ( obj) , (class )
-   final pickedImage =
-   await ImagePicker().pickImage(source: ImageSource.gallery);
-   // setState(() {
-     image = File(pickedImage!.path);
-     update();
-   // });
- }
+   isLoading.value=false;
 
+ }
+ // pickImage() async {
+ //   //class ImagePicker ( obj) , (class )
+ //   final pickedImage =
+ //   await ImagePicker().pickImage(source: ImageSource.gallery);
+ //   // setState(() {
+ //     image1 = File(pickedImage!.path);
+ //     update();
+ //   // });
+ // }
+ final _picker = ImagePicker();
+
+ pickImage() async {
+   try {
+     final XFile? image =
+     await _picker.pickImage(source: ImageSource.gallery);
+
+     if (image != null) image1.value = image.path;
+   } catch (e) {
+     print(e.toString());
+   }
+ }
  Future<DateTime?> showCalender({required BuildContext context}) async =>
      await showDatePicker(
          context: context,
-         initialDate: dateTime,
+         initialDate: dateTime.value,
          firstDate: DateTime(2000),
          lastDate: DateTime(2100),
          builder: (BuildContext context, Widget? child) {
@@ -66,7 +86,7 @@ class AddItemController extends GetxController{
  Future<TimeOfDay?> showTime({required BuildContext context}) async =>
      await showTimePicker(//Flutter SDK
          context: context,
-         initialTime: timeOfDay,
+         initialTime:  time.value,
          builder: (BuildContext context, Widget? child) {
            return Theme(
                data: ThemeData.light().copyWith(
@@ -75,7 +95,16 @@ class AddItemController extends GetxController{
                    colorScheme: ColorScheme.light(primary: K.primaryColor)),
                child: child!);
          });
+ //
 
+Future <String>uploadImageToFirebaseStorage(String imagePath,imageName)async{
+  // services.cloud.collection('users').doc('id').
 
+  final ref=await services.storage.ref().child('Product_image/$imageName');
+ final uploadedImage= ref.putFile(File(imagePath));
+  final imageURL= (await (await uploadedImage).ref.getDownloadURL()).toString();
+  return imageURL;
+
+ }
 
 }

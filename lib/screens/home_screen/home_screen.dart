@@ -92,8 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: Border.all(color: K.primaryColor, width: 2),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Column(
-                    children: [
+                  child:
                       OctoImage(
                         image: CachedNetworkImageProvider(
                           item.image,
@@ -107,10 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         fit: BoxFit.cover,
                       ),
-                      Text(item.name),
 
-                    ],
-                  )
 
           ))
               .toList(),

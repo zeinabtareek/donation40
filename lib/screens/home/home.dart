@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../const/style.dart';
 import '../../helpers/connectivity.dart';
+import '../history_screen/history_screen.dart';
 import '../home_screen/home_screen.dart';
 import '../more_info_screen/more_info_screen.dart';
 import 'controllers/bottom_nav_bar_controller.dart';
@@ -34,8 +35,7 @@ final List bodyScreens = [
 
   MoreInfoScreen(),
   HomeScreen(),
-  HomeScreen(),
-  // HistoryScreen(),
+   HistoryScreen(),
     ].obs;
 final List bodyTitle = [
 
