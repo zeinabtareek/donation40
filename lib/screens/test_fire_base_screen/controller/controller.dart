@@ -48,6 +48,12 @@ getDataDatbase()async{
   });
 
 }
-
+//10
+//UI(lam3ti ,baladia-essnad)
+//firebase (donation)
+//sqllite-bloc
+//Apis(weather , news )
+//Amit(Food ninja)
+//Ecommerce
 
 }
