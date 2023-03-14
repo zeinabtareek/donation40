@@ -60,10 +60,11 @@ dependencies:
   flutter_local_notifications: ^9.6.0
   intl:
   flutter_svg:
-  firebase_auth:
+  firebase_auth: ^3.3.0
   firebase_core:
   cloud_firestore:
   firebase_storage:
+  firebase_database: ^8.0.1
 
 
 

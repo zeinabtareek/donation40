@@ -8,7 +8,7 @@ class UserModel{
   UserModel({this.name,this.id,this.phone,this.deviceToken});
 
 
-  toJson(){
+  toJson(){ //
     Map<String, dynamic> data = {};
     data['name'] = name;
     data['deviceToken'] = deviceToken;
@@ -24,4 +24,9 @@ class UserModel{
 
 
   }
+
+  // Map map ={};
+  // Map <String ,dynamic>map2 ={};
+  //
+
 }

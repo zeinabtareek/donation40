@@ -24,6 +24,7 @@ class AddItemController extends GetxController{
  final image1 = ''.obs;
  final    isLoading= false.obs;
 
+ ///**************************** **************************** add item to firebase fire store ****************************  ****************************
  addItemToFirebase(apartmentNumber,lat,lng,areaNumber,address,landMark)async{
 
 
@@ -48,15 +49,43 @@ class AddItemController extends GetxController{
    isLoading.value=false;
 
  }
- // pickImage() async {
- //   //class ImagePicker ( obj) , (class )
- //   final pickedImage =
- //   await ImagePicker().pickImage(source: ImageSource.gallery);
- //   // setState(() {
- //     image1 = File(pickedImage!.path);
- //     update();
- //   // });
- // }
+
+ ///**************************** **************************** add item to realTime database  **************************** ****************************
+
+
+ addItemToRealTimeDatabase(apartmentNumber,lat,lng,areaNumber,address,landMark)async{
+   isLoading.value=true;
+   var y='${newTimeByHours.value!.hour}:${newTimeByHours.value?.minute}';
+   var x='${newTime.value?.year}.${ newTime.value?.month}.${ newTime.value?.day}';
+   await services.addItemToRealTimeDatabase(
+       ItemModel(
+           date: x,
+           time: y ,
+           apartmentNumber:apartmentNumber,
+           lng :lng,
+           lat:lat,
+           status: 'Success',
+           imageUrl: await uploadImageToFirebaseStorage(image1.value,image1.value),
+           areaNumber:areaNumber, //pointer 5
+           address:address,
+           landMark:landMark,
+           pieces :itemCountController.text,
+           userToken:services.authSer.auth.currentUser!.uid
+   ), time).then((v){
+     return Get.snackbar('done', 'one item is added',backgroundColor: Colors.white24,
+       duration: Duration(seconds: 3)
+     );
+
+   });
+
+   isLoading.value=false;
+
+ }
+
+
+
+
+
  final _picker = ImagePicker();
 
  pickImage() async {

@@ -29,7 +29,9 @@ register()async{//dart- isolate
 // return
 }
 logIn(email,pass)async{
- await services.auth.signInWithEmailAndPassword(email: signUnEmail, password: signUpPassword);
+ var user=await services.auth.signInWithEmailAndPassword(email: signUnEmail, password: signUpPassword);
+ await CacheHelper.saveData(key: 'token', value:  user.user!.uid);
+
 
 }
 logOut(){

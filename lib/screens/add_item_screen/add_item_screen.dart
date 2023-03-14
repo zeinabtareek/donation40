@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../componants/custom_button.dart';
+import '../../componants/custom_main_card_screen.dart';
 import '../../componants/snackbar.dart';
 import '../../const/style.dart';
 import 'controller/add_item_controller.dart';
@@ -214,22 +215,33 @@ class _AddItemScreenState extends State<AddItemScreen> {
               K.sizedBoxH,
               Obx(()=>Center(
 
-                child: Button(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: Get.height / 20.h,
-                  onPressed: () {
-                    controller.addItemToFirebase(widget.apartmentNumber,widget.lat,widget.lng,widget.areaNumber.toString(),widget.address,widget.restAddress).then((v){
-                      showSnackBar(context,'one item added successfully ');
+                child: Row(
+                  children: [
+                    Button(
+                      width: MediaQuery.of(context).size.width / 2,
+                      height: Get.height / 20.h,
+                      onPressed: () {
+                        controller.addItemToFirebase(widget.apartmentNumber,widget.lat,widget.lng,widget.areaNumber.toString(),widget.address,widget.restAddress).then((v){
+                          showSnackBar(context,'one item added successfully ');
 
-                      Get.off(Home());
-                    });
-                    // controller.addItemToFirebase(widget.restAddress);
-                  },
-                  text: controller.isLoading.value==true?'loading ....':'Submit',
-                  isFramed: false,
+                          Get.off(Home());
+                        });
+                        // controller.addItemToFirebase(widget.restAddress);
+                      },
+                      text: controller.isLoading.value==true?'loading ....':'Submit',
+                      isFramed: false,
+                    ),
+
+
+                    CustomMainScreenCard(
+                        label: 'donate in realTime Database',
+                        onTap: () {
+                          controller.addItemToRealTimeDatabase(widget.apartmentNumber,widget.lat,widget.lng,widget.areaNumber.toString(),widget.address,widget.restAddress);
+                        })
+                  ],
                 ),
               )
-              )
+              ),
             ],
           ),
         ),

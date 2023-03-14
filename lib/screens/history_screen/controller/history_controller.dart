@@ -28,6 +28,12 @@ class HistoryController extends GetxController {
     print(services.getUerProducts());
     return HistoryServices().getUerProducts();
   }
+
+  getProductsFromRealTimeDatabase()async{
+    return HistoryServices().getProductsFromRealTimeDatabase();
+  }
+
+
   deleteItem(id)async {
     await services.deleteItem(id);
   }
